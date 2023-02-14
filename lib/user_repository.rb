@@ -25,23 +25,29 @@ class UserRepository
     DatabaseConnection.exec_params(sql_query, params)
   end
     
-  def find(id)
-    sql_query = 'SELECT id, name, username, email, password FROM users WHERE id = $1;'
-    result_set = DatabaseConnection.exec_params(sql_query, [id])
+  def find(method, value)
+    query = <<~SQL
+      SELECT * FROM users#{' '}
+      WHERE #{method} = $1;
+    SQL
 
-    first_record = result_set.first
+    params = [value]
+
+    result_set = DatabaseConnection.exec_params(query, params)
+
+    record = result_set.first
+
+    return if record.nil?
 
     user = User.new
-    user.id = first_record['id'].to_i
-    user.name = first_record['name']
-    user.username = first_record['username']
-    user.email = first_record['email']
-    user.password = first_record['password']
+    user.id = record['id'].to_i
+    user.username = record['username']
+    user.name = record['name']
+    user.email = record['email']
+    user.password = record['password']
 
-    return user
+    user
   end
-
-  
 
   def delete(id)
     sql_query = 'DELETE FROM users WHERE id = $1;'
@@ -54,5 +60,5 @@ class UserRepository
     DatabaseConnection.exec_params(sql_query,params)
 
     return nil
-  end
+  end  
 end

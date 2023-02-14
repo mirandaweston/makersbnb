@@ -1,15 +1,12 @@
-# frozen_string_literal: true
+source 'https://rubygems.org'
 
-source "https://rubygems.org"
+gem 'pg', '~> 1.3'
+gem 'rack-test', '~> 1.1'
+gem 'rubocop', group: 'development'
+gem 'sinatra', '~> 2.2'
+gem 'sinatra-contrib', '~> 2.2'
+gem 'webrick', '~> 1.7'
 
-# gem "rails"
+gem 'rspec', '~> 3.11'
 
-gem "sinatra", "~> 2.2"
-gem "sinatra-contrib", "~> 2.2"
-gem "pg", "~> 1.3"
-gem "webrick", "~> 1.7"
-gem "rack-test", "~> 1.1"
-
-gem "rspec", "~> 3.11"
-
-gem "rainbow", "~> 3.1"
+gem 'rainbow', '~> 3.1'
