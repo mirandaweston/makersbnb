@@ -1,7 +1,5 @@
 require 'user_repository'
-require 'user'
 require 'database_connection'
-
 
 def reset_users_table
   seeds_sql = File.read('spec/seeds_bnb.sql')
@@ -43,47 +41,43 @@ RSpec.describe UserRepository do
     expect(user_repo.all.length).to eq 3
     expect(user_repo.all.last.name).to eq 'Jerome'
   end
+
+  it 'finds a single user' do
+    repo = UserRepository.new
+    user = repo.find(1)
+
+    expect(user.id).to eq 1
+    expect(user.name).to eq 'Joel'
+    expect(user.username).to eq 'joelio'
+    expect(user.password).to eq 'password1'
+  end
+
+  it 'deletes a user' do
+    user_repo = UserRepository.new
+    user = user_repo.find(1)
+
+    user_repo.delete(user.id)
+
+    expect(user_repo.all.length).to eq 1
+    expect(user_repo.all.first.id).to eq 2
+  end
+
+  it 'updates a user' do
+    user_repo = UserRepository.new
+    user = user_repo.find(1)
+
+    user.name = 'Joel_2'
+    user.username = 'joelio_2'
+    user.email = 'joel@makers.com_2'
+    user.password = 'password1_2'
+
+    user_repo.update(user)
+
+    updated_user = user_repo.find(1)
+    # expect(updated_user.id).to eq 1
+    expect(updated_user.name).to eq 'Joel_2'
+    expect(updated_user.username).to eq 'joelio_2'
+    expect(updated_user.email).to eq 'joel@makers.com_2'
+    expect(updated_user.password).to eq 'password1_2'
+  end
 end
-
-
-   
-
-# # 2
-# # Get a single user
-
-# repo = UserRepository.new
-
-# user = repo.find(1)
-
-# user.id # =>  1
-# user.name # =>  'Joel'
-# user.username # => 'joelio'
-# user.password # => 'password1'
-
-# # 4
-# # Delete a user
-
-# user_repo = UserRepository.new
-# user = user_repo.find(1)
-
-# user_repo.delete(user.id)
-
-# user_repo.all # => 1
-# user_repo.all.first.id # => 2
-
-# # 5
-# # Update a user
-
-# user_repo = UserRepository.new
-# user = user_repo.find(1)
-
-# user.name # =>  'Joel_2'
-# user.username # => 'joelio_2'
-# user.password # => 'password1_2'
-
-# user_repo.update(user)
-
-# updated_user = user_repo.find(1)
-# updated_user.name # => 'Joel_2'
-# updated_user.username # => 'joelio_2'
-# updated_user.password # => 'password1_2'
