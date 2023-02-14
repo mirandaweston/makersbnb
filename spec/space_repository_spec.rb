@@ -2,14 +2,14 @@ require 'space_repository'
 
 RSpec.describe SpaceRepository do
     
-  def reset_spaces_table
+  def reset_tables
     seed_sql = File.read('spec/seeds_bnb.sql')
     connection = PG.connect({ host: '127.0.0.1', dbname: 'makersbnb_test' })
     connection.exec(seed_sql)
   end
     
       before(:each) do 
-        reset_spaces_table
+        reset_tables
       end
 
     it "returns all spaces" do  

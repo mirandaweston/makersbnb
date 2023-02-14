@@ -183,7 +183,7 @@ This is so you get a fresh table contents every time you run the test suite.
 
 # file: spec/space_repository_spec.rb
 
-def reset_spaces_table
+def reset_tables
   seed_sql = File.read('spec/seeds_bnb.sql')
   connection = PG.connect({ host: '127.0.0.1', dbname: 'makersbnb_test' })
   connection.exec(seed_sql)
@@ -191,7 +191,7 @@ end
 
 describe SpaceRepository do
   before(:each) do 
-    reset_spaces_table
+    reset_tables
   end
 
   # (your tests will go here).
