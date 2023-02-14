@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MakersBnB</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<form action="/login" method="POST">
+  <input name="username" placeholder="Username" required/>
+  <input name="password" placeholder="Password" type="password" required/>
+  <button type="submit">Log in</button>
+</form>
+
+<% if @error %>
+  <p><%= @error %></p>
+<% end %>
+
+</body>
+</html>
