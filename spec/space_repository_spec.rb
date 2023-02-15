@@ -21,15 +21,21 @@ RSpec.describe SpaceRepository do
       expect(spaces.first.name).to eq('Paradise Beach')
     end
 
-    it "returns a single space" do
-      repo = SpaceRepository.new
+    describe '#find' do
+      it 'returns matching record by id' do
+        repo = SpaceRepository.new
 
-      space = repo.find(1)
-      expect(space.name).to eq('Paradise Beach')
-      expect(space.available).to eq('t')
-      expect(space.description).to eq('Seaside getaway')
-      expect(space.price).to eq('120')
-      expect(space.user_id).to eq('1')
+        expected = have_attributes(
+          id: 2,
+          name: 'Cityscapes',
+          available: 't',
+          description: 'Bright lights and candlelit bars',
+          price: '100',
+          user_id: '2'
+        )
+  
+        expect(repo.find('id', 2)).to match(expected)
+      end
     end
       
     it "creates a new space" do
