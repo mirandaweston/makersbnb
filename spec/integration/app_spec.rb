@@ -52,6 +52,30 @@ describe Application do
     end
   end
 
+  context 'GET /signup' do
+    it 'provides a sign up page' do
+      response = get('/signup')
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include('Sign up')
+    end
+  end
+
+  context 'POST /signup' do
+    it 'returns the information for sign up' do
+      response = post(
+          '/signup',
+          name: 'jack',
+          username: 'jackio',
+          password: 'password10',
+          email: 'jack@makers.com'
+        )
+      
+      expect(response.status).to eq(200)
+      expect(response.body).to include('')
+    end
+  end
+
   context 'GET /login' do
     it 'returns the login view if not logged in' do
       response = get('/login', {}, { 'rack.session' => {} })

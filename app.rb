@@ -25,6 +25,19 @@ class Application < Sinatra::Base
     erb(:index)
   end
 
+  get '/signup' do
+    erb(:signup)
+  end
+
+  post '/signup' do
+    repo = UserRepository.new
+    new_user = User.new
+    new_user.name = params[:name]
+    new_user.username = params[:username]
+    new_user.email = params[:email]
+    new_user.password = params[:password]
+  end
+
   get '/login' do
     redirect('/') if session[:user_id]
 
