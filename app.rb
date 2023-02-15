@@ -1,6 +1,8 @@
 require 'sinatra/base'
 require 'sinatra/reloader'
 require_relative 'lib/user_repository'
+require_relative 'lib/space_repository'
+require_relative 'lib/database_connection'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -16,6 +18,9 @@ class Application < Sinatra::Base
       user_repo = UserRepository.new
       @user = user_repo.find('id', current_user_id)
     end
+
+    repo = SpaceRepository.new
+    @available_spaces = repo.find_available
 
     erb(:index)
   end

@@ -37,9 +37,18 @@ RSpec.describe SpaceRepository do
         expect(repo.find('id', 2)).to match(expected)
       end
     end
-      
-    it "creates a new space" do
 
+    it 'returns available spaces' do
+      repo = SpaceRepository.new
+    
+      spaces = repo.find_available
+      spaces.each do |space|
+        expect(space.available).to eq('t')
+      end
+      expect(spaces.length).to eq 2
+    end
+    
+    it "creates a new space" do
       repo = SpaceRepository.new
 
       space = Space.new

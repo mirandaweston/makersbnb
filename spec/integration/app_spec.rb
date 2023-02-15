@@ -40,6 +40,16 @@ describe Application do
         expect(response.body).to include('Hello Joel')
       end
     end
+
+    context 'spaces' do
+      it 'returns list of spaces that are available on homescreen' do
+        response = get('/')
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('Paradise Beach')
+        expect(response.body).to include('£')
+      end
+    end
   end
 
   context 'GET /login' do
