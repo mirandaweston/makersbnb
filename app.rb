@@ -51,4 +51,9 @@ class Application < Sinatra::Base
       erb(:login)
     end
   end
+
+  post '/logout' do
+    session.clear 
+    redirect '/'
+  end
 end
