@@ -8,6 +8,7 @@
 
 <% if @user %>
   <p>Hello <%= @user.name %></p>
+  <a href="/my_spaces">My spaces</a>
 <% else %>
   <form action="/login">
     <button type="submit">Log in</button>

@@ -1,8 +1,7 @@
-require_relative './space'
-require 'database_connection'
+require_relative 'space'
+require_relative 'database_connection'
 
 class SpaceRepository
-
   def all
     sql = 'SELECT id, name, available, description, price, user_id FROM spaces;'
     result_set = DatabaseConnection.exec_params(sql, [])
@@ -16,11 +15,11 @@ class SpaceRepository
       space.description = record['description']
       space.price = record['price']
       space.user_id = record['user_id']
-  
+
       spaces << space
     end
-    return spaces
-  end  
+    spaces
+  end
 
   def find(id)
     sql = 'SELECT id, name, available, description, price, user_id FROM spaces WHERE id = $1;'
@@ -36,7 +35,7 @@ class SpaceRepository
     space.price = record['price']
     space.user_id = record['user_id']
 
-    return space
+    space
   end
 
   def create(space)
@@ -71,9 +70,9 @@ class SpaceRepository
       space.description = record['description']
       space.price = record['price']
       space.user_id = record['user_id']
-  
+
       spaces << space
     end
-    return spaces
+    spaces
   end
 end

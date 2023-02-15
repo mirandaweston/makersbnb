@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'sinatra/reloader'
 require_relative 'lib/user_repository'
+require_relative 'lib/space_repository'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -24,6 +25,16 @@ class Application < Sinatra::Base
     redirect('/') if session[:user_id]
 
     erb(:login)
+  end
+
+  get '/my_spaces' do
+    redirect('/login') unless session[:user_id]
+
+    repo = SpaceRepository.new
+
+    @spaces = repo.find_all('user_id', session[:user_id])
+
+    erb(:my_spaces)
   end
 
   post '/login' do

@@ -1,4 +1,4 @@
-require 'user'
+require_relative 'user'
 
 class UserRepository
   def all
@@ -16,7 +16,7 @@ class UserRepository
       users << user
     end
 
-    return users
+    users
   end
 
   def create(user)
@@ -24,7 +24,7 @@ class UserRepository
     params = [user.name, user.username, user.email, user.password]
     DatabaseConnection.exec_params(sql_query, params)
   end
-    
+
   def find(column, value)
     query = <<~SQL
       SELECT * FROM users
@@ -51,14 +51,14 @@ class UserRepository
 
   def delete(id)
     sql_query = 'DELETE FROM users WHERE id = $1;'
-    DatabaseConnection.exec_params(sql_query,[id])
+    DatabaseConnection.exec_params(sql_query, [id])
   end
 
   def update(user)
     sql_query = 'UPDATE users SET name = $1, username = $2, email = $3, password = $4 WHERE id = $5;'
     params = [user.name, user.username, user.email, user.password, user.id]
-    DatabaseConnection.exec_params(sql_query,params)
+    DatabaseConnection.exec_params(sql_query, params)
 
-    return nil
-  end  
+    nil
+  end
 end
