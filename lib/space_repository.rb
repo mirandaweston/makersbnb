@@ -39,6 +39,26 @@ class SpaceRepository
     return space
   end
 
+  def find_available
+    sql = 'SELECT id, name, available, description, price, user_id FROM spaces WHERE available = TRUE;'
+    result_set = DatabaseConnection.exec_params(sql, [])
+
+    available_spaces = []
+
+    result_set.each do |record|
+      space = Space.new
+      space.id = record['id']
+      space.name = record['name']
+      space.available = record['available']
+      space.description = record['description']
+      space.price = record['price']
+      space.user_id = record['user_id']
+  
+      available_spaces << space
+    end
+    return available_spaces
+  end
+
   def create(space)
     sql = 'INSERT INTO spaces (name, available, description, price, user_id) VALUES ($1, $2, $3, $4, $5);'
     sql_params = [space.name, space.available, space.description, space.price, space.user_id]

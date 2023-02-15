@@ -31,9 +31,18 @@ RSpec.describe SpaceRepository do
       expect(space.price).to eq('120')
       expect(space.user_id).to eq('1')
     end
-      
-    it "creates a new space" do
 
+    it 'returns available spaces' do
+      repo = SpaceRepository.new
+    
+      spaces = repo.find_available
+      spaces.each do |space|
+        expect(space.available).to eq('t')
+      end
+      expect(spaces.length).to eq 2
+    end
+    
+    it "creates a new space" do
       repo = SpaceRepository.new
 
       space = Space.new

@@ -20,7 +20,7 @@ class Application < Sinatra::Base
     end
 
     repo = SpaceRepository.new
-    @spaces = repo.all
+    @available_spaces = repo.find_available
 
     erb(:index)
   end
