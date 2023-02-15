@@ -1,5 +1,5 @@
 require_relative './space'
-require 'database_connection'
+require_relative './database_connection'
 
 class SpaceRepository
 
