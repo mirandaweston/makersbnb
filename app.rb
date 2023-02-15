@@ -31,6 +31,16 @@ class Application < Sinatra::Base
     erb(:login)
   end
 
+  get '/my_spaces' do
+    redirect('/login') unless session[:user_id]
+
+    repo = SpaceRepository.new
+
+    @spaces = repo.find_all('user_id', session[:user_id])
+
+    erb(:my_spaces)
+  end
+
   post '/login' do
     return status 400 unless %i[username password].all? { |param| params.key?(param) }
 
