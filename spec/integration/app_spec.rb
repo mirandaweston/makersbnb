@@ -47,8 +47,8 @@ describe Application do
       response = get('/login', {}, { 'rack.session' => {} })
 
       expect(response.status).to eq(200)
-      expect(response.body).to include('<input class="box" name="username" placeholder="Username" required/>')
-      expect(response.body).to include('<input class="box" type="password" name="password" placeholder="Password" required/>')
+      expect(response.body).to include('<input name="username" placeholder="Username" required/>')
+      expect(response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
     end
 
     it 'redirects home if already logged in' do
