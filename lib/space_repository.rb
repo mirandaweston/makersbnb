@@ -50,4 +50,15 @@ class SpaceRepository
     sql_params = [id]
     DatabaseConnection.exec_params(sql, sql_params)
   end
+
+  def update(space, method, value)
+    sql = <<~SQL
+    UPDATE spaces#{' '}
+    SET #{method} = $1
+    WHERE id = #{space.id};
+    SQL
+
+    params = [value]
+    DatabaseConnection.exec_params(sql, params)
+  end
 end
