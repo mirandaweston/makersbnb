@@ -24,7 +24,7 @@ RSpec.describe UserRepository do
 
     expect(users[1].id).to eq 2
     expect(users[1].name).to eq 'Junaid'
-    expect(users[1].username).to eq 'Junio'
+    expect(users[1].username).to eq 'junio'
     expect(users[1].password).to eq 'password2'
   end
     
@@ -88,7 +88,7 @@ RSpec.describe UserRepository do
 
   it 'deletes a user' do
     user_repo = UserRepository.new
-    user = user_repo.find(1)
+    user = user_repo.find('id',1)
 
     user_repo.delete(user.id)
 
@@ -98,7 +98,7 @@ RSpec.describe UserRepository do
 
   it 'updates a user' do
     user_repo = UserRepository.new
-    user = user_repo.find(1)
+    user = user_repo.find('id',1)
 
     user.name = 'Joel_2'
     user.username = 'joelio_2'
@@ -107,7 +107,7 @@ RSpec.describe UserRepository do
 
     user_repo.update(user)
 
-    updated_user = user_repo.find(1)
+    updated_user = user_repo.find('id',1)
     # expect(updated_user.id).to eq 1
     expect(updated_user.name).to eq 'Joel_2'
     expect(updated_user.username).to eq 'joelio_2'

@@ -25,10 +25,10 @@ class UserRepository
     DatabaseConnection.exec_params(sql_query, params)
   end
     
-  def find(method, value)
+  def find(column, value)
     query = <<~SQL
-      SELECT * FROM users#{' '}
-      WHERE #{method} = $1;
+      SELECT * FROM users
+      WHERE #{column} = $1;
     SQL
 
     params = [value]
