@@ -3,7 +3,7 @@ require_relative '../lib/user_repository'
 
 def reset_tables
   seeds_sql = File.read('spec/seeds_bnb.sql')
-  connection = PG.connect({host: '127.0.0.1', dbname: 'makersbnb_test'})
+  connection = PG.connect({ host: '127.0.0.1', dbname: 'makersbnb_test' })
   connection.exec(seeds_sql)
 end
 
@@ -27,7 +27,7 @@ RSpec.describe UserRepository do
     expect(users[1].username).to eq 'junio'
     expect(users[1].password).to eq 'password2'
   end
-    
+
   it 'creates a new user' do
     user_repo = UserRepository.new
     user = User.new
@@ -37,12 +37,12 @@ RSpec.describe UserRepository do
     user.password = 'password3'
 
     user_repo.create(user)
-    
+
     expect(user_repo.all.length).to eq 3
     expect(user_repo.all.last.name).to eq 'Jerome'
   end
 
-   describe '#find' do
+  describe '#find' do
     it 'returns matching record by id' do
       repo = UserRepository.new
 
@@ -84,7 +84,7 @@ RSpec.describe UserRepository do
 
       expect(repo.find('email', 'junaid@makers.com')).to match(expected)
     end
-  end  
+  end
 
   it 'deletes a user' do
     user_repo = UserRepository.new
@@ -108,6 +108,7 @@ RSpec.describe UserRepository do
     user_repo.update(user)
 
     updated_user = user_repo.find('id',1)
+
     # expect(updated_user.id).to eq 1
     expect(updated_user.name).to eq 'Joel_2'
     expect(updated_user.username).to eq 'joelio_2'

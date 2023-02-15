@@ -21,21 +21,49 @@ class SpaceRepository
     spaces
   end
 
-  def find(id)
-    sql = 'SELECT id, name, available, description, price, user_id FROM spaces WHERE id = $1;'
-    sql_params = [id]
-    result_set = DatabaseConnection.exec_params(sql, sql_params)
+  def find(method, value)
+    query = <<~SQL
+      SELECT * FROM spaces#{' '}
+      WHERE #{method} = $1;
+    SQL
 
-    record = result_set[0]
+    params = [value]
+
+    result_set = DatabaseConnection.exec_params(query, params)
+
+    record = result_set.first
+
+    return if record.nil?
+
     space = Space.new
-    space.id = record['id']
+    space.id = record['id'].to_i
     space.name = record['name']
     space.available = record['available']
     space.description = record['description']
     space.price = record['price']
     space.user_id = record['user_id']
+    
+    return space
+  end
 
-    space
+  def find_available
+    sql = 'SELECT id, name, available, description, price, user_id FROM spaces WHERE available = TRUE;'
+    result_set = DatabaseConnection.exec_params(sql, [])
+
+    available_spaces = []
+
+    result_set.each do |record|
+      space = Space.new
+      space.id = record['id']
+      space.name = record['name']
+      space.available = record['available']
+      space.description = record['description']
+      space.price = record['price']
+      space.user_id = record['user_id']
+  
+      available_spaces << space
+    end
+    return available_spaces
   end
 
   def create(space)
