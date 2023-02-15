@@ -31,6 +31,12 @@ class Application < Sinatra::Base
     erb(:login)
   end
 
+  get '/new_space' do
+    redirect('/login') unless session[:user_id]
+
+    erb(:new_space)
+  end
+
   post '/login' do
     return status 400 unless %i[username password].all? { |param| params.key?(param) }
 

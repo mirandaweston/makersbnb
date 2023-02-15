@@ -70,6 +70,30 @@ describe Application do
     end
   end
 
+  context 'GET /new_space' do
+    context 'logged in' do
+      it 'returns my_space view' do
+        response = get('/new_space', {}, { 'rack.session' => { user_id: '1' } })
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('<input name="name" placeholder="Name" required/>')
+        expect(response.body).to include('<input name="price" placeholder="Price" required/>')
+        expect(response.body).to include('<input name="description" placeholder="Description" required/>')
+      end
+    end
+
+    context 'not logged in' do
+      it 'redirects to login view' do
+        response = get('/new_space', {}, { 'rack.session' => {} })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
+    end
+  end
+
   context 'POST /login' do
     context 'given missing/incorrect parameters' do
       it 'returns 400' do
