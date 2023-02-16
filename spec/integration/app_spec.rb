@@ -179,6 +179,49 @@ RSpec.describe Application do
     end
   end
 
+  context 'GET /my_spaces/:id/edit' do
+    context 'logged in' do
+      it 'returns a space with properties available for edit' do
+        response = get('/my_spaces/:id/edit', {}, { 'rack.session' => { user_id: '1' } })
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('<form action="/my_spaces/')
+        expect(response.body).to include('<label for="name">Name</label>')
+      end
+    end
+
+    context 'not logged in' do
+      it 'redirects to login view' do
+        response = get('/my_spaces/new', {}, { 'rack.session' => {} })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
+    end
+  end
+
+  context 'POST /my_spaces/:id/edit' do
+    it 'redirects to my_spaces view and displays edited space' do
+      response = post(
+        '/my_spaces/1/edit',
+        {
+          name: 'Paradise Beach',
+          price: 120,
+          description: 'Seaside getaway - now with hot tub!'
+        },
+        { 'rack.session' => { user_id: '1' } }
+      )
+
+      expect(response).to be_redirect
+      follow_redirect!
+      expect(last_response.body).to include('Paradise Beach')
+      expect(last_response.body).to include('£120 ppn')
+      expect(last_response.body).to include('hot tub')
+    end
+  end
+
   context 'POST /login' do
     context 'given missing/incorrect parameters' do
       it 'returns 400' do
