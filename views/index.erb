@@ -11,8 +11,9 @@
   <form action="/logout" method="POST">
     <button type="submit">Log out</button>
   </form>
-  <a href="/my_spaces">My spaces</a>
-  <a href="/bookings">Booking bookings</a>
+  <br>
+  <a href="/my_spaces">My spaces</a><br>
+  <a href="/bookings">Bookings</a><br><br>
 <% else %>
   <form action="/login">
     <button type="submit">Log in</button>
@@ -26,6 +27,11 @@
   <%= space.name %><br>
   <%= space.description %><br>
   £<%= space.price %> ppn<br>
+  <form action="/book_space" method="POST">
+    <input type="hidden" name="id" value="<%= space.id %>"/>
+    <input type="hidden" name="date_of_booking" value="<%= Date.today %>"/>
+    <button type="submit">Book</button>
+  </form>
   <br>
 <% end %>
 

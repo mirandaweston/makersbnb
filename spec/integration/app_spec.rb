@@ -166,6 +166,30 @@ RSpec.describe Application do
     end
   end
 
+  context 'POST /book_space' do
+    context 'logged in' do
+      it 'redirects to my_trips view' do
+        response = post('/book_space', {id: '3', date_of_booking: Date.new(2023,02,16)}, { 'rack.session' => { user_id: '1' } })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<p>Space id: 3</p>')
+        expect(last_response.body).to include('<p>Date: 2023-02-16</p>')
+      end
+    end
+
+    context 'not logged in' do
+      it 'redirects to login view' do
+        response = get('/my_spaces/new', {}, { 'rack.session' => {} })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
+    end
+  end
+
   context 'GET /my_spaces/new' do
     context 'logged in' do
       it 'returns my_space view' do
