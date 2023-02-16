@@ -3,6 +3,7 @@ require 'sinatra/reloader'
 require_relative 'lib/user_repository'
 require_relative 'lib/space_repository'
 require_relative 'lib/database_connection'
+require_relative 'lib/user'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -36,6 +37,10 @@ class Application < Sinatra::Base
     new_user.username = params[:username]
     new_user.email = params[:email]
     new_user.password = params[:password]
+
+    repo.create(new_user)
+
+    return erb(:login)
   end
 
   get '/login' do
