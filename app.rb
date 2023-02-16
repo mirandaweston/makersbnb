@@ -115,6 +115,24 @@ class Application < Sinatra::Base
     erb(:bookings)
   end
 
+  post '/book_space' do
+    redirect('/login') unless session[:user_id]
+
+    return status 400 unless params.key?(:id)
+
+    repo = BookingRepository.new
+
+    booking = Booking.new
+    booking.date_of_booking = params[:date_of_booking]
+    booking.approved = false # tbc if approved / pending / declined
+    booking.space_id = params[:id]
+    booking.user_id = session[:user_id]
+
+    repo.create(booking)
+
+    redirect '/bookings'
+  end
+
   post '/logout' do
     session.clear
     redirect '/'
