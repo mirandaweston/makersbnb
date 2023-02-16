@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require_relative 'lib/user_repository'
 require_relative 'lib/space_repository'
+require_relative 'lib/request_repository'
 require_relative 'lib/database_connection'
 
 class Application < Sinatra::Base
@@ -75,6 +76,15 @@ class Application < Sinatra::Base
     end
   end
 
+  get '/list-booking-requests' do
+    current_user_id = session[:user_id]
+
+    repo = RequestRepository.new
+    @booking_requests = repo.find('user_id', current_user_id)
+
+    erb(:booking_requests)
+  end
+  
   post '/logout' do
     session.clear 
     redirect '/'

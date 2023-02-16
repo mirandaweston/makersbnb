@@ -78,6 +78,18 @@ class SpaceRepository
     DatabaseConnection.exec_params(sql, sql_params)
   end
 
+  def update(space, method, value)
+    sql = <<~SQL
+    UPDATE spaces#{' '}
+    SET #{method} = $1
+    WHERE id = #{space.id};
+    SQL
+
+    params = [value]
+    DatabaseConnection.exec_params(sql, params)
+  end
+end
+
   def find_all(column, value)
     query = <<~SQL
       SELECT * FROM spaces
@@ -104,3 +116,4 @@ class SpaceRepository
     spaces
   end
 end
+

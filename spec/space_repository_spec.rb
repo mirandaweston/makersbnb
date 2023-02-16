@@ -81,6 +81,18 @@ RSpec.describe SpaceRepository do
       expect(spaces.first.id).to eq('2')
     end  
 
+    it 'updates a space' do
+      
+      repo = SpaceRepository.new
+
+      space = repo.find(1)
+
+      repo.update(space,'available','f')
+      
+      updated_request = repo.find(1)
+      expect(updated_request.available).to eq 'f'
+    end   
+    
     it 'finds all spaces based on user id' do
       repo = SpaceRepository.new
       spaces = repo.find_all('user_id',2)
