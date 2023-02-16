@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require_relative 'lib/user_repository'
 require_relative 'lib/space_repository'
-require_relative 'lib/request_repository'
+require_relative 'lib/booking_repository'
 require_relative 'lib/database_connection'
 
 class Application < Sinatra::Base
@@ -21,7 +21,7 @@ class Application < Sinatra::Base
     end
 
     repo = SpaceRepository.new
-    @available_spaces = repo.find_available
+    @spaces = repo.find_all('available', true)
 
     erb(:index)
   end
@@ -76,17 +76,19 @@ class Application < Sinatra::Base
     end
   end
 
-  get '/list-booking-requests' do
+  get '/bookings' do
+    redirect('/login') unless session[:user_id]
+
     current_user_id = session[:user_id]
 
-    repo = RequestRepository.new
-    @booking_requests = repo.find('user_id', current_user_id)
+    repo = BookingRepository.new
+    @bookings = repo.find_all('user_id', current_user_id)
 
-    erb(:booking_requests)
+    erb(:bookings)
   end
-  
+
   post '/logout' do
-    session.clear 
+    session.clear
     redirect '/'
   end
 end

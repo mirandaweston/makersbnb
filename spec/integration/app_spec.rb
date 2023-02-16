@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rack/test'
 require_relative '../../app'
 
-describe Application do
+RSpec.describe Application do
   # This is so we can use rack-test helper methods.
   include Rack::Test::Methods
 
@@ -21,6 +21,8 @@ describe Application do
       response = get('/')
 
       expect(response.status).to eq(200)
+      expect(response.body).to include('Paradise Beach')
+      expect(response.body).to include('£')
     end
 
     context 'not logged in' do
@@ -41,16 +43,6 @@ describe Application do
         expect(response.body).to include('<a href="/my_spaces">My spaces</a>')
       end
     end
-
-    context 'spaces' do
-      it 'returns list of spaces that are available on homescreen' do
-        response = get('/')
-
-        expect(response.status).to eq(200)
-        expect(response.body).to include('Paradise Beach')
-        expect(response.body).to include('£')
-      end
-    end
   end
 
   context 'GET /signup' do
@@ -65,38 +57,42 @@ describe Application do
   context 'POST /signup' do
     it 'returns the information for sign up' do
       response = post(
-          '/signup',
-          name: 'jack',
-          username: 'jackio',
-          password: 'password10',
-          email: 'jack@makers.com'
-        )
-      
+        '/signup',
+        name: 'jack',
+        username: 'jackio',
+        password: 'password10',
+        email: 'jack@makers.com'
+      )
+
       expect(response.status).to eq(200)
       expect(response.body).to include('')
     end
   end
 
   context 'GET /login' do
-    it 'returns the login view if not logged in' do
-      response = get('/login', {}, { 'rack.session' => {} })
+    context 'not logged in' do
+      it 'returns the login view' do
+        response = get('/login', {}, { 'rack.session' => {} })
 
-      expect(response.status).to eq(200)
-      expect(response.body).to include('<input name="username" placeholder="Username" required/>')
-      expect(response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+        expect(response.status).to eq(200)
+        expect(response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
     end
 
-    it 'redirects home if already logged in' do
-      response = get('/login', {}, { 'rack.session' => { user_id: '1' } })
+    context 'logged in' do
+      it 'redirects home' do
+        response = get('/login', {}, { 'rack.session' => { user_id: '1' } })
 
-      expect(response).to be_redirect
-      follow_redirect!
-      expect(last_response.body).to include('Hello Joel')
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('Hello Joel')
+      end
     end
   end
 
   context 'GET /my_spaces' do
-    context 'if logged in' do
+    context 'logged in' do
       it 'returns the my_spaces view' do
         response = get('/my_spaces', {}, { 'rack.session' => { user_id: '1' } })
 
@@ -105,9 +101,31 @@ describe Application do
       end
     end
 
-    context 'if not logged in' do
-      it 'returns the my_spaces view' do
+    context 'not logged in' do
+      it 'returns the login view' do
         response = get('/my_spaces', {}, { 'rack.session' => {} })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
+    end
+  end
+
+  context 'GET /booking_bookings' do
+    context 'logged in' do
+      it 'returns the booking_bookings view' do
+        response = get('/booking_bookings', {}, { 'rack.session' => { user_id: '1' } })
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('2023-02-13')
+      end
+    end
+
+    context 'not logged in' do
+      it 'returns the login view' do
+        response = get('/booking_bookings', {}, { 'rack.session' => {} })
 
         expect(response).to be_redirect
         follow_redirect!
@@ -179,15 +197,14 @@ describe Application do
       end
     end
   end
-  
-  context "POST /logout" do
-    it "logs out and redirects to the homepage" do
+
+  context 'POST /logout' do
+    it 'logs out and redirects to the homepage' do
       response = post('/logout')
 
       expect(response).to be_redirect
-        follow_redirect!
+      follow_redirect!
       expect(last_response.body).to include('<button type="submit">Log in</button>')
     end
   end
-
 end
