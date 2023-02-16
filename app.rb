@@ -116,12 +116,9 @@ class Application < Sinatra::Base
   end
 
   post '/book_space' do
-    unless session[:user_id] 
-      redirect('/login') 
-      halt
-    end
+    redirect('/login') unless session[:user_id]
 
-    return status 400 unless params.key?(:id) 
+    return status 400 unless params.key?(:id)
 
     repo = BookingRepository.new
 
