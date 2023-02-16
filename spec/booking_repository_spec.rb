@@ -74,6 +74,7 @@ RSpec.describe BookingRepository do
     booking_repo = BookingRepository.new
     
     result = booking_repo.bookings_with_spaces('1')
+
     expect(result.length).to eq 1
     expect(result.first.name).to eq "Cityscapes"
   end
