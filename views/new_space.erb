@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MakersBnB</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<form action="new" method="POST">
+  <input name="name" placeholder="Name" type="text" required/>
+  <input name="price" placeholder="Price" type="number" required/>
+  <input name="description" placeholder="Description" type="text" required/>
+  <button type="submit">Submit</button>
+</form>
+
+<% if @error %>
+  <p><%= @error %></p>
+<% end %>
+
+</body>
+</html>
