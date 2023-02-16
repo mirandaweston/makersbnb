@@ -179,4 +179,15 @@ describe Application do
       end
     end
   end
+  
+  context "POST /logout" do
+    it "logs out and redirects to the homepage" do
+      response = post('/logout')
+
+      expect(response).to be_redirect
+        follow_redirect!
+      expect(last_response.body).to include('<button type="submit">Log in</button>')
+    end
+  end
+
 end
