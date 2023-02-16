@@ -69,26 +69,6 @@ RSpec.describe Application do
     end
   end
 
-  context 'POST /my_spaces/new' do
-    it 'redirects to my_spaces view and displays new space' do
-      response = post(
-        '/my_spaces/new',
-        {
-          name: 'New space',
-          price: 100,
-          description: 'Lovely new space'
-        },
-        { 'rack.session' => { user_id: '1' } }
-      )
-
-      expect(response).to be_redirect
-      follow_redirect!
-      expect(last_response.body).to include('New space')
-      expect(last_response.body).to include('£100 ppn')
-      expect(last_response.body).to include('Lovely new space')
-    end
-  end
-
   context 'GET /login' do
     context 'not logged in' do
       it 'returns the login view' do
@@ -133,6 +113,26 @@ RSpec.describe Application do
     end
   end
 
+  context 'POST /my_spaces/new' do
+    it 'redirects to my_spaces view and displays new space' do
+      response = post(
+        '/my_spaces/new',
+        {
+          name: 'New space',
+          price: 100,
+          description: 'Lovely new space'
+        },
+        { 'rack.session' => { user_id: '1' } }
+      )
+
+      expect(response).to be_redirect
+      follow_redirect!
+      expect(last_response.body).to include('New space')
+      expect(last_response.body).to include('£100 ppn')
+      expect(last_response.body).to include('Lovely new space')
+    end
+  end
+
   context 'GET /bookings' do
     context 'logged in' do
       it 'returns the bookings view' do
@@ -152,6 +152,17 @@ RSpec.describe Application do
         expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
         expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
       end
+    end
+  end
+
+  context 'POST /my_spaces/delete' do
+    it 'removes space from my_spaces view' do
+      response = post('/my_spaces/delete', {id: '2'}, { 'rack.session' => { user_id: '2' } })
+
+      expect(response).to be_redirect
+      follow_redirect!
+      expect(last_response.body).to include('Countryside Lodge')
+      expect(last_response.body).not_to include('Cityscapes')
     end
   end
 
