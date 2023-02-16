@@ -14,6 +14,9 @@
   <%= space.name %><br>
   <%= space.description %><br>
   £<%= space.price %> ppn<br>
+  <form action="/my_spaces/<%= space.id %>/edit">
+    <button type="submit">Edit this space</button>
+  </form>
   <br>
 <% end %>
 
