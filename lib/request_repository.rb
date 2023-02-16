@@ -2,75 +2,69 @@ require_relative '../lib/space'
 require_relative '../lib/request'
 
 class RequestRepository
-    def all
-        sql = 'SELECT id, date_of_request, approved, user_id, space_id FROM requests;'
-        results = DatabaseConnection.exec_params(sql, [])
+  def all
+    query = <<~SQL
+      SELECT id, date_of_request, approved, user_id, space_id
+      FROM requests;
+    SQL
 
-        requests = []
+    results = DatabaseConnection.exec_params(query, [])
 
-        results.each do |record|
-            request = Request.new
-            request.id = record['id']
-            request.date_of_request = record['date_of_request']
-            request.approved = record['approved']
-            request.user_id = record['user_id']
-            request.space_id = record['space_id']
+    results.map { |record| record_to_request(record) }
+  end
 
-            requests << request
-        end
-        return requests
-    end
+  def find_all(method, value)
+    query = <<~SQL
+      SELECT * FROM requests
+      WHERE #{method} = $1;
+    SQL
 
-    def find(method, value)
-        sql = <<~SQL
-        SELECT * FROM requests#{' '}
-        WHERE #{method} = $1;
-        SQL
+    params = [value]
+    results = DatabaseConnection.exec_params(query, params)
 
-        #sql = 'SELECT * FROM requests WHERE #{method} = $1;'
-        params = [value]
-        results = DatabaseConnection.exec_params(sql, params) 
+    results.map { |record| record_to_request(record) }
+  end
 
-        requests = []
+  def create(request)
+    query = <<~SQL
+      INSERT INTO requests (date_of_request, approved, user_id, space_id)
+      VALUES ($1, $2, $3, $4);
+    SQL
 
-        results.each do |record|
-            request = Request.new
-            request.id = record['id']
-            request.date_of_request = record['date_of_request']
-            request.approved = record['approved']
-            request.user_id = record['user_id']
-            request.space_id = record['space_id']
+    params = [request.date_of_request, request.approved, request.user_id, request.space_id]
+    DatabaseConnection.exec_params(query, params)
+  end
 
-            requests << request
-        end
+  def update(request, method, value)
+    query = <<~SQL
+      UPDATE requests
+      SET #{method} = $1
+      WHERE id = $2;
+    SQL
 
-        return requests
-    end
+    params = [value, request.id]
+    DatabaseConnection.exec_params(query, params)
 
-    def create(request)
-      sql_query = 'INSERT INTO requests (date_of_request, approved, user_id, space_id) VALUES ($1, $2, $3, $4);'
-      params = [request.date_of_request, request.approved, request.user_id, request.space_id]
-      DatabaseConnection.exec_params(sql_query, params)
-    end
+    return unless method == 'approved'
 
-    def update(request, method, value)
-        sql = <<~SQL
-        UPDATE requests#{' '}
-        SET #{method} = $1
-        WHERE id = #{request.id};
-        SQL
+    repo = SpaceRepository.new
+    space = repo.find('id', request.space_id)
+    repo.update(space, 'available', false)
+  end
 
-        params = [value]
-        DatabaseConnection.exec_params(sql, params)
+  private
 
-        if method == 'approved'
-          repo = SpaceRepository.new
-          space = repo.find(request.space_id)
-          repo.update(space,'available','f')
-        end
-    end
+  def record_to_request(record)
+    request = Request.new
+    request.id = record['id'].to_i
+    request.date_of_request = Date.parse(record['date_of_request'])
+    request.approved = value_to_boolean(record['approved'])
+    request.user_id = record['user_id'].to_i
+    request.space_id = record['space_id'].to_i
+    request
+  end
 
-    # def delete()
-
-    # end
+  def value_to_boolean(value)
+    value.eql?('t') ? true : false
+  end
 end

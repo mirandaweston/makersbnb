@@ -1,15 +1,19 @@
+<!DOCTYPE html>
 <html>
-    <head></head>
-    <body>
-        <h1>Booking requests</h1>
-        <%@booking_requests.each do |request|%>
-        <div>
-            <p>Booking number: <%=request.id%></p>
-            <p>Date: <%=request.date_of_request%></p>
-            <p>Status: <%=request.approved%></p>
-            <!--<p>User id: <%=request.user_id%></p>-->
-            <p>Space id: <%=request.space_id%></p> 
-        </div>
-        <%end%>
-    </body>
+<head>
+  <title>MakersBnB</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<h1>Booking requests</h1>
+<% @booking_requests.each do |request| %>
+  <div>
+    <p>Booking number: <%= request.id %></p>
+    <p>Date: <%= request.date_of_request %></p>
+    <p>Status: <%= request.approved %></p>
+    <p>Space id: <%= request.space_id %></p>
+  </div>
+<% end %>
+</body>
 </html>

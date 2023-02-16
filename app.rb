@@ -21,7 +21,7 @@ class Application < Sinatra::Base
     end
 
     repo = SpaceRepository.new
-    @available_spaces = repo.find_available
+    @spaces = repo.find_all('available', true)
 
     erb(:index)
   end
@@ -76,17 +76,19 @@ class Application < Sinatra::Base
     end
   end
 
-  get '/list-booking-requests' do
+  get '/booking_requests' do
+    redirect('/login') unless session[:user_id]
+
     current_user_id = session[:user_id]
 
     repo = RequestRepository.new
-    @booking_requests = repo.find('user_id', current_user_id)
+    @booking_requests = repo.find_all('user_id', current_user_id)
 
     erb(:booking_requests)
   end
-  
+
   post '/logout' do
-    session.clear 
+    session.clear
     redirect '/'
   end
 end
