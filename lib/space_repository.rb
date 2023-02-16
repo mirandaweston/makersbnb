@@ -1,8 +1,7 @@
-require_relative './space'
-require_relative './database_connection'
+require_relative 'space'
+require_relative 'database_connection'
 
 class SpaceRepository
-
   def all
     sql = 'SELECT id, name, available, description, price, user_id FROM spaces;'
     result_set = DatabaseConnection.exec_params(sql, [])
@@ -16,11 +15,11 @@ class SpaceRepository
       space.description = record['description']
       space.price = record['price']
       space.user_id = record['user_id']
-  
+
       spaces << space
     end
-    return spaces
-  end  
+    spaces
+  end
 
   def find(method, value)
     query = <<~SQL
@@ -77,5 +76,31 @@ class SpaceRepository
     sql = 'DELETE FROM spaces WHERE id=$1;'
     sql_params = [id]
     DatabaseConnection.exec_params(sql, sql_params)
+  end
+
+  def find_all(column, value)
+    query = <<~SQL
+      SELECT * FROM spaces
+      WHERE #{column} = $1;
+    SQL
+
+    params = [value]
+
+    result_set = DatabaseConnection.exec_params(query, params)
+
+    spaces = []
+
+    result_set.each do |record|
+      space = Space.new
+      space.id = record['id']
+      space.name = record['name']
+      space.available = record['available']
+      space.description = record['description']
+      space.price = record['price']
+      space.user_id = record['user_id']
+
+      spaces << space
+    end
+    spaces
   end
 end

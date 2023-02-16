@@ -16,7 +16,7 @@ RSpec.describe SpaceRepository do
       repo = SpaceRepository.new
 
       spaces = repo.all
-      expect(spaces.length).to eq(2)
+      expect(spaces.length).to eq(4)
       expect(spaces.first.id).to eq('1') 
       expect(spaces.first.name).to eq('Paradise Beach')
     end
@@ -77,7 +77,35 @@ RSpec.describe SpaceRepository do
       repo.delete(1)
 
       spaces = repo.all
-      expect(spaces.length).to eq(1)
+      expect(spaces.length).to eq(3)
       expect(spaces.first.id).to eq('2')
     end  
+
+    it 'finds all spaces based on user id' do
+      repo = SpaceRepository.new
+      spaces = repo.find_all('user_id',2)
+
+      expect(spaces.length).to eq(3)
+      expect(spaces[0].id).to eq('2') 
+      expect(spaces[0].name).to eq('Cityscapes')
+
+      expect(spaces[1].id).to eq('3') 
+      expect(spaces[1].name).to eq('Countryside Lodge')
+    end
+
+    it 'finds all spaces based on availability' do
+      repo = SpaceRepository.new
+      spaces = repo.find_all('available',true)
+
+      expect(spaces.length).to eq(3)
+      expect(spaces[0].id).to eq('1') 
+      expect(spaces[0].name).to eq('Paradise Beach')
+
+      expect(spaces[1].id).to eq('2') 
+      expect(spaces[1].name).to eq('Cityscapes')
+
+      expect(spaces[2].id).to eq('4') 
+      expect(spaces[2].name).to eq('Seaside Spa')
+    end
+
 end

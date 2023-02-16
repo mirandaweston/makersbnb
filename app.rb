@@ -25,10 +25,33 @@ class Application < Sinatra::Base
     erb(:index)
   end
 
+  get '/signup' do
+    erb(:signup)
+  end
+
+  post '/signup' do
+    repo = UserRepository.new
+    new_user = User.new
+    new_user.name = params[:name]
+    new_user.username = params[:username]
+    new_user.email = params[:email]
+    new_user.password = params[:password]
+  end
+
   get '/login' do
     redirect('/') if session[:user_id]
 
     erb(:login)
+  end
+
+  get '/my_spaces' do
+    redirect('/login') unless session[:user_id]
+
+    repo = SpaceRepository.new
+
+    @spaces = repo.find_all('user_id', session[:user_id])
+
+    erb(:my_spaces)
   end
 
   post '/login' do

@@ -38,6 +38,7 @@ describe Application do
 
         expect(response.status).to eq(200)
         expect(response.body).to include('Hello Joel')
+        expect(response.body).to include('<a href="/my_spaces">My spaces</a>')
       end
     end
 
@@ -49,6 +50,30 @@ describe Application do
         expect(response.body).to include('Paradise Beach')
         expect(response.body).to include('£')
       end
+    end
+  end
+
+  context 'GET /signup' do
+    it 'provides a sign up page' do
+      response = get('/signup')
+
+      expect(response.status).to eq(200)
+      expect(response.body).to include('Sign up')
+    end
+  end
+
+  context 'POST /signup' do
+    it 'returns the information for sign up' do
+      response = post(
+          '/signup',
+          name: 'jack',
+          username: 'jackio',
+          password: 'password10',
+          email: 'jack@makers.com'
+        )
+      
+      expect(response.status).to eq(200)
+      expect(response.body).to include('')
     end
   end
 
@@ -70,14 +95,32 @@ describe Application do
     end
   end
 
+  context 'GET /my_spaces' do
+    context 'if logged in' do
+      it 'returns the my_spaces view' do
+        response = get('/my_spaces', {}, { 'rack.session' => { user_id: '1' } })
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('Paradise Beach')
+      end
+    end
+
+    context 'if not logged in' do
+      it 'returns the my_spaces view' do
+        response = get('/my_spaces', {}, { 'rack.session' => {} })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
+    end
+  end
+
   context 'POST /login' do
     context 'given missing/incorrect parameters' do
       it 'returns 400' do
-        response = post(
-          '/login',
-          username: 'joelio',
-          pass: 'password1'
-        )
+        response = post('/login', username: 'joelio', pass: 'password1')
 
         expect(response.status).to eq(400)
       end
