@@ -103,6 +103,12 @@ class SpaceRepository
 
     #returns nothing
   end
+
+  def find_all(column, value)
+    #Executes SQL query
+    #SELECT * FROM spaces WHERE #{column} = $1;
+  end
+
 end
 ```
 
@@ -168,6 +174,36 @@ repo.delete(1)
 spaces = repo.all
 spaces.length # => 1
 spaces.first.id # => 2
+
+# 5
+# Finds all spaces based on user id
+
+repo = SpaceRepository.new
+spaces = repo.find_all('user_id',2)
+
+expect(spaces.length).to eq(3)
+expect(spaces[0].id).to eq('2') 
+expect(spaces[0].name).to eq('Cityscapes')
+
+expect(spaces[1].id).to eq('3') 
+expect(spaces[1].name).to eq('Countryside Lodge')
+
+# 6
+# Finds all spaces based on availability
+
+repo = SpaceRepository.new
+spaces = repo.find_all('available',true)
+
+expect(spaces.length).to eq(3)
+expect(spaces[0].id).to eq('1') 
+expect(spaces[0].name).to eq('Paradise Beach')
+
+expect(spaces[1].id).to eq('2') 
+expect(spaces[1].name).to eq('Cityscapes')
+
+expect(spaces[2].id).to eq('4') 
+expect(spaces[2].name).to eq('Seaside Spa')
+
 ```
 
 Encode this example as a test.

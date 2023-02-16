@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users, spaces, requests;
+DROP TABLE IF EXISTS users, spaces, bookings;
 
 CREATE TABLE users
 (
@@ -22,16 +22,16 @@ CREATE TABLE spaces
         on delete cascade
 );
 
-CREATE TABLE requests
+CREATE TABLE bookings
 (
     id              SERIAL PRIMARY KEY,
-    date_of_request date,
+    date_of_booking date,
     approved        boolean,
     user_id         int,
+    space_id        int,
     constraint fk_user foreign key (user_id)
         references users (id)
         on delete cascade,
-    space_id        int,
     constraint fk_space foreign key (space_id)
         references spaces (id)
         on delete cascade

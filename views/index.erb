@@ -11,15 +11,21 @@
   <form action="/new_space">
     <button type="submit">List a new space</button>
   </form>
+  <form action="/logout" method="POST">
+    <button type="submit">Log out</button>
+  </form>
+  <a href="/my_spaces">My spaces</a>
+  <a href="/bookings">Booking bookings</a>
 <% else %>
   <form action="/login">
     <button type="submit">Log in</button>
   </form>
+  <form action="/signup">
+    <button type="submit">Sign up</button>
+  </form>
 <% end %>
 
-<p>This is the homepage.</p>
-
-<% @available_spaces.each do |space| %>
+<% @spaces.each do |space| %>
   <%= space.name %><br>
   <%= space.description %><br>
   £<%= space.price %> ppn<br>

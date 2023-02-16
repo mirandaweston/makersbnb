@@ -1,4 +1,3 @@
-require_relative '../lib/user'
 require_relative '../lib/user_repository'
 
 def reset_tables
@@ -108,6 +107,7 @@ RSpec.describe UserRepository do
     user_repo.update(user)
 
     updated_user = user_repo.find('id', 1)
+
     # expect(updated_user.id).to eq 1
     expect(updated_user.name).to eq 'Joel_2'
     expect(updated_user.username).to eq 'joelio_2'

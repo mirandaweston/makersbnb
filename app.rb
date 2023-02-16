@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'sinatra/reloader'
 require_relative 'lib/user_repository'
 require_relative 'lib/space_repository'
+require_relative 'lib/booking_repository'
 require_relative 'lib/database_connection'
 
 class Application < Sinatra::Base
@@ -20,9 +21,22 @@ class Application < Sinatra::Base
     end
 
     repo = SpaceRepository.new
-    @available_spaces = repo.find_available
+    @spaces = repo.find_all('available', true)
 
     erb(:index)
+  end
+
+  get '/signup' do
+    erb(:signup)
+  end
+
+  post '/signup' do
+    repo = UserRepository.new
+    new_user = User.new
+    new_user.name = params[:name]
+    new_user.username = params[:username]
+    new_user.email = params[:email]
+    new_user.password = params[:password]
   end
 
   get '/login' do
@@ -35,6 +49,16 @@ class Application < Sinatra::Base
     redirect('/login') unless session[:user_id]
 
     erb(:new_space)
+  end
+
+  get '/my_spaces' do
+    redirect('/login') unless session[:user_id]
+
+    repo = SpaceRepository.new
+
+    @spaces = repo.find_all('user_id', session[:user_id])
+
+    erb(:my_spaces)
   end
 
   post '/login' do
@@ -56,5 +80,21 @@ class Application < Sinatra::Base
       @error = 'Username does not exist'
       erb(:login)
     end
+  end
+
+  get '/bookings' do
+    redirect('/login') unless session[:user_id]
+
+    current_user_id = session[:user_id]
+
+    repo = BookingRepository.new
+    @bookings = repo.find_all('user_id', current_user_id)
+
+    erb(:bookings)
+  end
+
+  post '/logout' do
+    session.clear
+    redirect '/'
   end
 end
