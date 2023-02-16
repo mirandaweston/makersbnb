@@ -8,6 +8,10 @@
 
 <% if @user %>
   <p>Hello <%= @user.name %></p>
+  <form action="/logout" method="POST">
+    <button type="submit">Log out</button>
+  </form>
+  <a href="/my_spaces">My spaces</a>
 <% else %>
   <form action="/login">
     <button type="submit">Log in</button>
@@ -15,6 +19,13 @@
 <% end %>
 
 <p>This is the homepage.</p>
+
+<% @available_spaces.each do |space| %>
+  <%= space.name %><br>
+  <%= space.description %><br>
+  £<%= space.price %> ppn<br>
+  <br>
+<% end %>
 
 </body>
 </html>
