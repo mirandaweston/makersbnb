@@ -69,6 +69,26 @@ RSpec.describe Application do
     end
   end
 
+  context 'POST /my_spaces/new' do
+    it 'redirects to my_spaces view and displays new space' do
+      response = post(
+        '/my_spaces/new',
+        {
+          name: 'New space',
+          price: 100,
+          description: 'Lovely new space'
+        },
+        { 'rack.session' => { user_id: '1' } }
+      )
+
+      expect(response).to be_redirect
+      follow_redirect!
+      expect(last_response.body).to include('New space')
+      expect(last_response.body).to include('£100 ppn')
+      expect(last_response.body).to include('Lovely new space')
+    end
+  end
+
   context 'GET /login' do
     context 'not logged in' do
       it 'returns the login view' do
@@ -113,10 +133,10 @@ RSpec.describe Application do
     end
   end
 
-  context 'GET /booking_bookings' do
+  context 'GET /bookings' do
     context 'logged in' do
-      it 'returns the booking_bookings view' do
-        response = get('/booking_bookings', {}, { 'rack.session' => { user_id: '1' } })
+      it 'returns the bookings view' do
+        response = get('/bookings', {}, { 'rack.session' => { user_id: '1' } })
 
         expect(response.status).to eq(200)
         expect(response.body).to include('2023-02-13')
@@ -125,7 +145,31 @@ RSpec.describe Application do
 
     context 'not logged in' do
       it 'returns the login view' do
-        response = get('/booking_bookings', {}, { 'rack.session' => {} })
+        response = get('/bookings', {}, { 'rack.session' => {} })
+
+        expect(response).to be_redirect
+        follow_redirect!
+        expect(last_response.body).to include('<input name="username" placeholder="Username" required/>')
+        expect(last_response.body).to include('<input name="password" placeholder="Password" type="password" required/>')
+      end
+    end
+  end
+
+  context 'GET /my_spaces/new' do
+    context 'logged in' do
+      it 'returns my_space view' do
+        response = get('/my_spaces/new', {}, { 'rack.session' => { user_id: '1' } })
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include('<input name="name" placeholder="Name" type="text" required/>')
+        expect(response.body).to include('<input name="price" placeholder="Price" type="number" required/>')
+        expect(response.body).to include('<input name="description" placeholder="Description" type="text" required/>')
+      end
+    end
+
+    context 'not logged in' do
+      it 'redirects to login view' do
+        response = get('/my_spaces/new', {}, { 'rack.session' => {} })
 
         expect(response).to be_redirect
         follow_redirect!

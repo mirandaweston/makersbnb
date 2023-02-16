@@ -4,6 +4,7 @@ require_relative 'lib/user_repository'
 require_relative 'lib/space_repository'
 require_relative 'lib/booking_repository'
 require_relative 'lib/database_connection'
+require_relative 'lib/user'
 
 class Application < Sinatra::Base
   enable :sessions
@@ -37,12 +38,39 @@ class Application < Sinatra::Base
     new_user.username = params[:username]
     new_user.email = params[:email]
     new_user.password = params[:password]
+
+    repo.create(new_user)
+
+    return erb(:login)
   end
 
   get '/login' do
     redirect('/') if session[:user_id]
 
     erb(:login)
+  end
+
+  get '/my_spaces/new' do
+    redirect('/login') unless session[:user_id]
+
+    erb(:new_space)
+  end
+
+  post '/my_spaces/new' do
+    return status 400 unless %i[name price description].all? { |param| params.key?(param) }
+
+    repo = SpaceRepository.new
+
+    space = Space.new
+    space.name = params[:name]
+    space.available = true
+    space.description = params[:description]
+    space.price = params[:price]
+    space.user_id = session[:user_id]
+
+    repo.create(space)
+
+    redirect '/my_spaces'
   end
 
   get '/my_spaces' do
