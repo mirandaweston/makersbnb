@@ -8,9 +8,6 @@
 
 <% if @user %>
   <p>Hello <%= @user.name %></p>
-  <form action="/new_space">
-    <button type="submit">List a new space</button>
-  </form>
   <form action="/logout" method="POST">
     <button type="submit">Log out</button>
   </form>

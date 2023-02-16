@@ -69,6 +69,26 @@ RSpec.describe Application do
     end
   end
 
+  context 'POST /my_spaces/new' do
+    it 'redirects to my_spaces view and displays new space' do
+      response = post(
+        '/my_spaces/new',
+        {
+          name: 'New space',
+          price: 100,
+          description: 'Lovely new space'
+        },
+        { 'rack.session' => { user_id: '1' } }
+      )
+
+      expect(response).to be_redirect
+      follow_redirect!
+      expect(last_response.body).to include('New space')
+      expect(last_response.body).to include('£100 ppn')
+      expect(last_response.body).to include('Lovely new space')
+    end
+  end
+
   context 'GET /login' do
     context 'not logged in' do
       it 'returns the login view' do
@@ -135,21 +155,21 @@ RSpec.describe Application do
     end
   end
 
-  context 'GET /new_space' do
+  context 'GET /my_spaces/new' do
     context 'logged in' do
       it 'returns my_space view' do
-        response = get('/new_space', {}, { 'rack.session' => { user_id: '1' } })
+        response = get('/my_spaces/new', {}, { 'rack.session' => { user_id: '1' } })
 
         expect(response.status).to eq(200)
-        expect(response.body).to include('<input name="name" placeholder="Name" required/>')
-        expect(response.body).to include('<input name="price" placeholder="Price" required/>')
-        expect(response.body).to include('<input name="description" placeholder="Description" required/>')
+        expect(response.body).to include('<input name="name" placeholder="Name" type="text" required/>')
+        expect(response.body).to include('<input name="price" placeholder="Price" type="number" required/>')
+        expect(response.body).to include('<input name="description" placeholder="Description" type="text" required/>')
       end
     end
 
     context 'not logged in' do
       it 'redirects to login view' do
-        response = get('/new_space', {}, { 'rack.session' => {} })
+        response = get('/my_spaces/new', {}, { 'rack.session' => {} })
 
         expect(response).to be_redirect
         follow_redirect!

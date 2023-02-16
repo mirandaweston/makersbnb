@@ -6,6 +6,10 @@
 </head>
 <body>
 
+<form action="/my_spaces/new">
+  <button type="submit">List a new space</button>
+</form>
+
 <% @spaces.each do |space| %>
   <%= space.name %><br>
   <%= space.description %><br>

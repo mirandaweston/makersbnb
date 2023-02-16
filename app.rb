@@ -45,10 +45,27 @@ class Application < Sinatra::Base
     erb(:login)
   end
 
-  get '/new_space' do
+  get '/my_spaces/new' do
     redirect('/login') unless session[:user_id]
 
     erb(:new_space)
+  end
+
+  post '/my_spaces/new' do
+    return status 400 unless %i[name price description].all? { |param| params.key?(param) }
+
+    repo = SpaceRepository.new
+
+    space = Space.new
+    space.name = params[:name]
+    space.available = true
+    space.description = params[:description]
+    space.price = params[:price]
+    space.user_id = session[:user_id]
+
+    repo.create(space)
+
+    redirect '/my_spaces'
   end
 
   get '/my_spaces' do
