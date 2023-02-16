@@ -75,6 +75,28 @@ class BookingRepository
     return bookings
   end
 
+  def bookings_with_spaces_owner(session_id)
+    sql_query = 'SELECT bookings.id, bookings.date_of_booking, bookings.approved, bookings.user_id, bookings.space_id AS space_id, spaces.name FROM bookings JOIN spaces ON spaces.id = bookings.space_id WHERE spaces.user_id = $1;'
+    params = [session_id]
+    bookings_spaces_joined = DatabaseConnection.exec_params(sql_query, params)
+
+    bookings = []
+
+    bookings_spaces_joined.each do |record|
+      booking = BookingWithSpace.new
+      booking.id = record['id']
+      booking.date_of_booking = record['date_of_booking']
+      booking.approved = record['approved']
+      booking.user_id = record['user_id']
+      booking.space_id = record['space_id']
+      booking.name = record['name']
+
+      bookings << booking
+    end
+
+    return bookings
+  end
+
   #private
 
   def record_to_booking(record)
