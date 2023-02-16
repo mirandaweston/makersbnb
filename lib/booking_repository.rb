@@ -53,22 +53,6 @@ class BookingRepository
     repo.update(space, 'available', false)
   end
 
-  private
-
-  def record_to_booking(record)
-    booking = Booking.new
-    booking.id = record['id'].to_i
-    booking.date_of_booking = Date.parse(record['date_of_booking'])
-    booking.approved = value_to_boolean(record['approved'])
-    booking.user_id = record['user_id'].to_i
-    booking.space_id = record['space_id'].to_i
-    booking
-  end
-
-  def value_to_boolean(value)
-    value.eql?('t') ? true : false
-  end
-
   def bookings_with_spaces(session_id)
     sql_query = 'SELECT bookings.id, bookings.date_of_booking, bookings.approved, bookings.user_id, bookings.space_id AS space_id, spaces.name FROM bookings JOIN spaces ON spaces.id = bookings.space_id WHERE bookings.user_id = $1;'
     params = [session_id]
@@ -89,5 +73,21 @@ class BookingRepository
     end
 
     return bookings
+  end
+
+  #private
+
+  def record_to_booking(record)
+    booking = Booking.new
+    booking.id = record['id'].to_i
+    booking.date_of_booking = Date.parse(record['date_of_booking'])
+    booking.approved = value_to_boolean(record['approved'])
+    booking.user_id = record['user_id'].to_i
+    booking.space_id = record['space_id'].to_i
+    booking
+  end
+
+  def value_to_boolean(value)
+    value.eql?('t') ? true : false
   end
 end

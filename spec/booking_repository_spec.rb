@@ -70,10 +70,10 @@ RSpec.describe BookingRepository do
     expect(space.available).to eq false
   end
 
-  xit 'returns bookings and spaces for a user' do
+  it 'returns bookings and spaces for a user' do
     booking_repo = BookingRepository.new
     
-    result = booking_repo.send(:bookings_with_spaces)
+    result = booking_repo.bookings_with_spaces('1')
     expect(result.length).to eq 1
     expect(result.first.name).to eq "Cityscapes"
   end

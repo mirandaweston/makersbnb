@@ -82,7 +82,7 @@ class Application < Sinatra::Base
     current_user_id = session[:user_id]
 
     repo = BookingRepository.new
-    @bookings = repo.find_all('user_id', current_user_id)
+    @bookings = repo.bookings_with_spaces(current_user_id)
 
     erb(:bookings)
   end

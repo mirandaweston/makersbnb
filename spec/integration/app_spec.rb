@@ -207,4 +207,14 @@ RSpec.describe Application do
       expect(last_response.body).to include('<button type="submit">Log in</button>')
     end
   end
+
+  context 'GET /bookings' do
+    it 'directs to user bookings page' do
+      #current_user_id = get('/', {}, { 'rack.session' => { user_id: '1' } })
+      response = post('/bookings', '1')
+
+      expect(response.status).to eq(200)
+      #expect(response.body).to include('<button type="submit">Log in</button>')
+    end
+  end
 end
