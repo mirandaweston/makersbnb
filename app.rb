@@ -73,6 +73,40 @@ class Application < Sinatra::Base
     redirect '/my_spaces'
   end
 
+  get '/my_spaces/:id/edit' do
+    redirect('/login') unless session[:user_id]
+  
+    repo = SpaceRepository.new
+  
+    @space = repo.find('id', params[:id])
+  
+    erb(:edit_space, locals: {
+      name: @space.name,
+      description: @space.description,
+      price: @space.price,
+      available: @space.available
+    })
+  end
+
+  post '/my_spaces/:id/edit' do
+    redirect('/login') unless session[:user_id]
+    
+    repo = SpaceRepository.new
+    space = repo.find('id', params[:id])
+  
+    space.name = params[:name]
+    space.description = params[:description]
+    space.price = params[:price]
+    space.available = params[:available]
+    
+    repo.update(space, :name, space.name)
+    repo.update(space, :description, space.description)
+    repo.update(space, :price, space.price)
+    repo.update(space, :available, space.available)
+    
+    redirect('/my_spaces')
+  end
+
   get '/my_spaces' do
     redirect('/login') unless session[:user_id]
 

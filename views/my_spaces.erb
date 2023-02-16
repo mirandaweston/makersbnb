@@ -17,6 +17,9 @@
   <form action="my_spaces/delete" method="POST">
     <input type="hidden" name="id" value="<%= space.id %>"/>
     <button type="submit">Delete</button>
+</form>
+  <form action="/my_spaces/<%= space.id %>/edit">
+    <button type="submit">Edit this space</button>
   </form>
   <br>
 <% end %>
