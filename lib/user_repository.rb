@@ -2,16 +2,23 @@ require_relative 'user'
 
 class UserRepository
   def all
-    sql_query = 'SELECT id, name, username, email, password FROM users;'
-    result_set = DatabaseConnection.exec_params(sql_query, [])
+    query = <<~SQL
+      SELECT id, name, username, email, password
+      FROM users;
+    SQL
+
+    result_set = DatabaseConnection.exec_params(query, [])
 
     result_set.map { |record| record_to_user(record) }
   end
 
   def create(user)
-    sql_query = 'INSERT INTO users (name, username, email, password) VALUES ($1, $2, $3, $4);'
+    query = <<~SQL
+      INSERT INTO users (name, username, email, password)
+      VALUES ($1, $2, $3, $4);
+    SQL
     params = [user.name, user.username, user.email, user.password]
-    DatabaseConnection.exec_params(sql_query, params)
+    DatabaseConnection.exec_params(query, params)
   end
 
   def find(column, value)
@@ -32,14 +39,21 @@ class UserRepository
   end
 
   def delete(id)
-    sql_query = 'DELETE FROM users WHERE id = $1;'
-    DatabaseConnection.exec_params(sql_query, [id])
+    query = <<~SQL
+      DELETE FROM users
+      WHERE id = $1;
+    SQL
+
+    DatabaseConnection.exec_params(query, [id])
   end
 
   def update(user)
-    sql_query = 'UPDATE users SET name = $1, username = $2, email = $3, password = $4 WHERE id = $5;'
+    query = <<~SQL
+      UPDATE users SET name = $1, username = $2, email = $3, password = $4
+      WHERE id = $5;
+    SQL
     params = [user.name, user.username, user.email, user.password, user.id]
-    DatabaseConnection.exec_params(sql_query, params)
+    DatabaseConnection.exec_params(query, params)
   end
 
   private

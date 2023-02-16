@@ -86,8 +86,8 @@ RSpec.describe SpaceRepository do
 
     repo.update(space, 'available', false)
 
-    updated_request = repo.find('id', 1)
-    expect(updated_request.available).to eq false
+    updated_booking = repo.find('id', 1)
+    expect(updated_booking.available).to eq false
   end
 
   it 'finds all spaces based on user id' do

@@ -113,10 +113,10 @@ RSpec.describe Application do
     end
   end
 
-  context 'GET /booking_requests' do
+  context 'GET /booking_bookings' do
     context 'logged in' do
-      it 'returns the booking_requests view' do
-        response = get('/booking_requests', {}, { 'rack.session' => { user_id: '1' } })
+      it 'returns the booking_bookings view' do
+        response = get('/booking_bookings', {}, { 'rack.session' => { user_id: '1' } })
 
         expect(response.status).to eq(200)
         expect(response.body).to include('2023-02-13')
@@ -125,7 +125,7 @@ RSpec.describe Application do
 
     context 'not logged in' do
       it 'returns the login view' do
-        response = get('/booking_requests', {}, { 'rack.session' => {} })
+        response = get('/booking_bookings', {}, { 'rack.session' => {} })
 
         expect(response).to be_redirect
         follow_redirect!

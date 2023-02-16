@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users, spaces, requests;
+DROP TABLE IF EXISTS users, spaces, bookings;
 
 CREATE TABLE users
 (
@@ -22,10 +22,10 @@ CREATE TABLE spaces
         on delete cascade
 );
 
-CREATE TABLE requests
+CREATE TABLE bookings
 (
     id              SERIAL PRIMARY KEY,
-    date_of_request date,
+    date_of_booking date,
     approved        boolean,
     user_id         int,
     space_id        int,

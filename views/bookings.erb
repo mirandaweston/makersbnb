@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MakersBnB</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<h1>Booking bookings</h1>
+<% @bookings.each do |booking| %>
+  <div>
+    <p>Booking number: <%= booking.id %></p>
+    <p>Date: <%= booking.date_of_booking %></p>
+    <p>Status: <%= booking.approved %></p>
+    <p>Space id: <%= booking.space_id %></p>
+  </div>
+<% end %>
+</body>
+</html>
