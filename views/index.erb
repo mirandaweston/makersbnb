@@ -27,6 +27,11 @@
   <%= space.name %><br>
   <%= space.description %><br>
   £<%= space.price %> ppn<br>
+  <form action="/book_space" method="POST">
+    <input type="hidden" name="id" value="<%= space.id %>"/>
+    <input type="hidden" name="date_of_booking" value="<%= Date.today %>"/>
+    <button type="submit">Book</button>
+  </form>
   <br>
 <% end %>
 

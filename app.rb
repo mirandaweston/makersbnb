@@ -73,6 +73,40 @@ class Application < Sinatra::Base
     redirect '/my_spaces'
   end
 
+  get '/my_spaces/:id/edit' do
+    redirect('/login') unless session[:user_id]
+  
+    repo = SpaceRepository.new
+  
+    @space = repo.find('id', params[:id])
+  
+    erb(:edit_space, locals: {
+      name: @space.name,
+      description: @space.description,
+      price: @space.price,
+      available: @space.available
+    })
+  end
+
+  post '/my_spaces/:id/edit' do
+    redirect('/login') unless session[:user_id]
+    
+    repo = SpaceRepository.new
+    space = repo.find('id', params[:id])
+  
+    space.name = params[:name]
+    space.description = params[:description]
+    space.price = params[:price]
+    space.available = params[:available]
+    
+    repo.update(space, :name, space.name)
+    repo.update(space, :description, space.description)
+    repo.update(space, :price, space.price)
+    repo.update(space, :available, space.available)
+    
+    redirect('/my_spaces')
+  end
+
   get '/my_spaces' do
     redirect('/login') unless session[:user_id]
 
@@ -124,6 +158,32 @@ class Application < Sinatra::Base
     @owner_bookings = repo.bookings_with_spaces_owner(current_user_id)
 
     erb(:owner_bookings)
+  end  
+
+  post '/my_spaces/delete' do
+    repo = SpaceRepository.new
+
+    repo.delete(params[:id])
+
+    redirect '/my_spaces'
+  end
+
+  post '/book_space' do
+    redirect('/login') unless session[:user_id]
+
+    return status 400 unless params.key?(:id)
+
+    repo = BookingRepository.new
+
+    booking = Booking.new
+    booking.date_of_booking = params[:date_of_booking]
+    booking.approved = false # tbc if approved / pending / declined
+    booking.space_id = params[:id]
+    booking.user_id = session[:user_id]
+
+    repo.create(booking)
+
+    redirect '/bookings'
   end
 
   post '/logout' do
