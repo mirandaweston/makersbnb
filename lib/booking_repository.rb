@@ -1,5 +1,6 @@
 require_relative '../lib/space'
 require_relative '../lib/booking'
+require_relative '../lib/booking_with_space'
 
 class BookingRepository
   def all
@@ -52,7 +53,48 @@ class BookingRepository
     repo.update(space, 'available', false)
   end
 
+  def bookings_with_spaces(session_id)
+    query = <<~SQL
+      SELECT bookings.id, bookings.date_of_booking, bookings.approved, bookings.user_id, bookings.space_id AS space_id, spaces.name 
+      FROM bookings 
+      JOIN spaces 
+      ON spaces.id = bookings.space_id 
+      WHERE bookings.user_id = $1;
+    SQL
+
+    params = [session_id]
+    results = DatabaseConnection.exec_params(query, params)
+
+    results.map { |record| record_to_user_bookings(record) }
+  end
+
+  def bookings_with_spaces_owner(session_id)
+    query = <<~SQL 
+      SELECT bookings.id, bookings.date_of_booking, bookings.approved, bookings.user_id, bookings.space_id AS space_id, spaces.name 
+      FROM bookings 
+      JOIN spaces 
+      ON spaces.id = bookings.space_id 
+      WHERE spaces.user_id = $1;
+    SQL
+
+    params = [session_id]
+    results = DatabaseConnection.exec_params(query, params)
+  
+    results.map { |record| record_to_user_bookings(record) }
+  end
+
   private
+
+  def record_to_user_bookings(record)
+    booking = BookingWithSpace.new
+    booking.id = record['id']
+    booking.date_of_booking = record['date_of_booking']
+    booking.approved = record['approved']
+    booking.user_id = record['user_id']
+    booking.space_id = record['space_id']
+    booking.name = record['name']
+    booking
+  end
 
   def record_to_booking(record)
     booking = Booking.new

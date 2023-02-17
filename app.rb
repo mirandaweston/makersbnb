@@ -144,10 +144,21 @@ class Application < Sinatra::Base
     current_user_id = session[:user_id]
 
     repo = BookingRepository.new
-    @bookings = repo.find_all('user_id', current_user_id)
-    
+    @bookings = repo.bookings_with_spaces(current_user_id)
+
     erb(:bookings)
   end
+
+  get '/owner_bookings' do
+    redirect('/login') unless session[:user_id]
+
+    current_user_id = session[:user_id]
+
+    repo = BookingRepository.new
+    @owner_bookings = repo.bookings_with_spaces_owner(current_user_id)
+
+    erb(:owner_bookings)
+  end  
 
   post '/my_spaces/delete' do
     repo = SpaceRepository.new

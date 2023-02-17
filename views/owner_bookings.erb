@@ -6,8 +6,8 @@
 </head>
 <body>
 
-<h1>Bookings </h1>
-<% @bookings.each do |booking| %>
+<h1>Bookings on my listings</h1>
+<% @owner_bookings.each do |booking| %>
   <div>
     <p>Booking number: <%= booking.id %></p>
     <p>Date: <%= booking.date_of_booking %></p>

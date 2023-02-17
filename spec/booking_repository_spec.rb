@@ -69,4 +69,21 @@ RSpec.describe BookingRepository do
     space = spaces_repo.find('id', booking.space_id)
     expect(space.available).to eq false
   end
+
+  it 'returns bookings and spaces requested by a user' do
+    booking_repo = BookingRepository.new
+    
+    result = booking_repo.bookings_with_spaces('1')
+
+    expect(result.length).to eq 1
+    expect(result.first.name).to eq "Cityscapes"
+  end
+
+  it 'returns bookings and spaces for an owner' do
+    booking_repo = BookingRepository.new
+    
+    result = booking_repo.bookings_with_spaces_owner('2')
+    expect(result.length).to eq 1
+    expect(result.first.name).to eq "Cityscapes"
+  end
 end
