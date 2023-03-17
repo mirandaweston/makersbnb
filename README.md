@@ -1,6 +1,6 @@
 # MakersBnB: A group project
 
-### This is a web application built with Ruby, Sinatra, PostgreSQL and RSpec.
+### This is a full stack web application built with Ruby, Sinatra, PostgreSQL, HTML, CSS, Bootstrap and RSpec.
 
 ## 1. User stories
 
@@ -44,3 +44,10 @@ rackup
 - RSpec
 - PostgreSQL
 - Sinatra
+- HTML
+- CSS
+- Bootstrap
+
+## 4. UI
+<img width="604" alt="Screenshot 2023-03-17 at 12 51 10" src="https://user-images.githubusercontent.com/117643324/225909554-d94b5ba4-4881-4c22-b7f8-e0ad60029354.png">
+
